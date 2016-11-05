@@ -1,5 +1,5 @@
 {
-  "name": "sms/sms-sdk",
+  "name": "sms/sms-sdk-php",
   "description": "Heysky PHP SDK",
   "type": "library",
   "keywords": [
