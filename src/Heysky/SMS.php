@@ -67,7 +67,7 @@ class SMS
 
     function send(){
         $data = $this->encode();
-        $resp = Client::post("", $data);
+        $resp = Client::get("", $data);
         return $resp;
     }
 
