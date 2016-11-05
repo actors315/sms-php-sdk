@@ -6,7 +6,7 @@
  * Time: 14:27
  */
 
-namespace Heysky;
+namespace sms\heysky;
 
 
 class Client

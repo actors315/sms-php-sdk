@@ -13,11 +13,12 @@
     }
   ],
   "require": {
-    "php": ">=5.3.0"
+    "php": ">=5.3.0",
+    "ext-curl": "*"
   },
   "autoload": {
     "psr-4": {
-      "Heysky\\": "src/Heysky"
+      "sms\\": "src/sms"
     }
   },
   "minimum-stability": "stable"
