@@ -7,6 +7,7 @@
  */
 
 namespace sms\heysky;
+use sms\Client;
 
 /**
  * Class SMS
@@ -67,8 +68,9 @@ class SMS
 
     function send(){
         $data = $this->encode();
-        $resp = Client::get("", $data);
-        return $resp;
+        $response = Client::get("",$data);
+        parse_str($response, $response_array);
+        return $response_array;
     }
 
     private function encode(){
@@ -90,7 +92,7 @@ class SMS
      * @param string $hexStr      convert a hex string to binary string
      * @return string binary string
      */
-    private function decodeHexStr($dataCoding, $hexStr)
+    public static function decodeHexStr($dataCoding, $hexStr)
     {
         $hexLenght = strlen($hexStr);
 
