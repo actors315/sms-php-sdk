@@ -17,7 +17,7 @@ class Client
      * @var array
      */
     private static $api = array(
-        "heysky" => "http://api2.santo.cc/submit",
+        "heysky" => "https://api2.santo.cc/submit",
     );
 
     /**
@@ -60,7 +60,7 @@ class Client
         return self::$api[self::$plat];
     }
 
-    public static function request($method, $path, $data)
+    public static function get($path, $data)
     {
         $url = self::getAPIEndPoint();
         $url .= $path;
@@ -69,27 +69,13 @@ class Client
         $data['cppwd'] = self::$appSecret;
         $data['sa'] = self::$sa;
 
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        switch ($method) {
-            case "GET":
-                    $url .= '?'.http_build_query($data);
-                    curl_setopt($ch, CURLOPT_URL, $url);
-                break;
+        $url .= '?';
+        foreach ($data as $key => $item){
+            $url.= $key . '=' . $item . '&';
         }
-        $response = curl_exec($ch);
-        curl_close($ch);
+        $url = rtrim($url,'&');
+        $response = file_get_contents($url);
         parse_str($response, $response_array);
         return $response_array;
-    }
-
-    public static function post($path, $data)
-    {
-        return self::request('POST', $path, $data);
-    }
-
-    public static function get($path, $data)
-    {
-        return self::request('GET', $path, $data);
     }
 }

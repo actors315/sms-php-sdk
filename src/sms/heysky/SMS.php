@@ -28,19 +28,9 @@ class SMS
     /**
      * 目标号码，MSISDN
      *
-     * @var string
+     * @var array
      */
-    private $da;
-
-    /**
-     * 消息内容编码
-     * 15: GBK
-     * 8: Unicode
-     * 0: ISO8859-1
-     *
-     * @var string
-     */
-    private $dc = 15;
+    private $da = [];
 
     /**
      * @var 消息内容
@@ -53,12 +43,6 @@ class SMS
 
     function setDa($da){
         $this->da[] = $da;
-    }
-
-    function setDc($dc){
-        if (in_array($dc, [15, 8, 0])) {
-            $this->dc = $dc;
-        }
     }
 
     function setSm($sm){
@@ -78,8 +62,7 @@ class SMS
         return [
             'command'   => $this->command,
             'da' => implode(',',$this->da),
-            'dc' => $this->dc,
-            'sm' => $this->encodeHexStr('',$this->sm)
+            'sm' => urlencode($this->sm)
         ];
     }
 
@@ -90,7 +73,7 @@ class SMS
      * @param string $hexStr      convert a hex string to binary string
      * @return string binary string
      */
-    private function decodeHexStr($dataCoding, $hexStr)
+    public static function decodeHexStr($dataCoding, $hexStr)
     {
         $hexLenght = strlen($hexStr);
 
@@ -110,7 +93,7 @@ class SMS
      * @param string $realStr
      * @return string hex string
      */
-    private function encodeHexStr($dataCoding, $realStr) {
+    public function encodeHexStr($dataCoding, $realStr) {
         return bin2hex($realStr);
     }
 }

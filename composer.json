@@ -20,6 +20,5 @@
     "psr-4": {
       "sms\\": "src/sms"
     }
-  },
-  "minimum-stability": "stable"
+  }
 }
