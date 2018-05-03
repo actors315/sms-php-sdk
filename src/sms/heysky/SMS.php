@@ -7,7 +7,6 @@
  */
 
 namespace sms\heysky;
-use sms\Client;
 
 /**
  * Class SMS
@@ -34,6 +33,16 @@ class SMS
     private $da = [];
 
     /**
+     * 消息内容编码
+     * 15: GBK
+     * 8: Unicode
+     * 0: ISO8859-1
+     *
+     * @var string
+     */
+    private $dc = 15;
+
+    /**
      * @var 消息内容
      */
     private $sm;
@@ -46,15 +55,35 @@ class SMS
         $this->da[] = $da;
     }
 
+    function setDc($dc){
+        if (in_array($dc, [15, 8, 0])) {
+            $this->dc = $dc;
+        }
+    }
+
     function setSm($sm){
         $this->sm = $sm;
     }
 
     function send(){
         $data = $this->encode();
-        $response = Client::get("",$data);
-        parse_str($response, $response_array);
-        return $response_array;
+        $resp = Client::get('submit', $data);
+        return $resp;
+    }
+
+    function verifyPhoneNumber(){
+        $phoneNumber = current($this->da);
+        $resp = Client::get('verifyPhoneNumber', [
+            'da' => $phoneNumber
+        ],'json');
+        return $resp;
+    }
+
+    function getSmsStatus($msgid){
+        $resp = Client::get('get-rptstatus', [
+            'msgid' => $msgid
+        ],'json');
+        return $resp[0];
     }
 
     private function encode(){

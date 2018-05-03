@@ -17,7 +17,7 @@ class Client
      * @var array
      */
     private static $api = array(
-        "heysky" => "https://api2.santo.cc/submit",
+        "heysky" => "https://api2.santo.cc/",
     );
 
     /**
@@ -48,7 +48,7 @@ class Client
      */
     private static $sa;
 
-    public static function initialize($appId, $appSecret, $sa)
+    public static function initialize($appId, $appSecret, $sa = '')
     {
         self::$appId = $appId;
         self::$appSecret = $appSecret;
@@ -60,7 +60,13 @@ class Client
         return self::$api[self::$plat];
     }
 
-    public static function get($path, $data)
+    /**
+     * @param $path
+     * @param $data
+     * @param string $type 返回结果格式
+     * @return mixed
+     */
+    public static function get($path, $data,$type = 'query_string')
     {
         $url = self::getAPIEndPoint();
         $url .= $path;
@@ -74,8 +80,18 @@ class Client
             $url.= $key . '=' . $item . '&';
         }
         $url = rtrim($url,'&');
-        $response = file_get_contents($url);
-        parse_str($response, $response_array);
+        $response = file_get_contents($url,false,stream_context_create(array('ssl' => array('verify_peer' => false, 'verify_peer_name' => false))));
+        switch ($type){
+            case 'query_string':
+                parse_str($response, $response_array);
+                break;
+            case 'json':
+                $response_array = json_decode($response,true);
+                break;
+            default:
+                $response_array = $response;
+        }
+
         return $response_array;
     }
 }
